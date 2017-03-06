@@ -1,3 +1,75 @@
+
+// http://www.bzarg.com/p/how-a-kalman-filter-works-in-pictures/
+//
+//  PREDICT STEP:
+//
+//   1. compute next state:
+//    use F .. prediction matrix, which gives us our next state:  x_k = F_k * x_k-1  (x = (p,v))
+//
+//   2. update covariance matrix
+//    P_k = F_k * P_k−1 * FT_k
+//
+//   3. model the uncertainty associated with the “world” (i.e. things we aren’t keeping track of)
+//    by adding some new uncertainty after every prediction step:
+//   then, we produce a new Gaussian blob, with a different covariance (but the same mean):
+//    by simply adding Qk, giving our complete expression for the prediction step:
+//
+//   -> we add Q_k to P_k (and add B_k*u_k to x_k)
+//
+//    -> P_k = F_k * P_k−1 * FT_k + Q_k
+//
+//
+//   We have a fuzzy estimate of where our system might be, given by x̂ k and Pk.
+//
+//   !! What happens when we get some data from our sensors?
+//
+//
+//  Each sensor tells us something indirect about the state— in other words,
+//   the sensors operate on a state and produce a set of readings.
+//
+//  Notice that the units and scale of the reading might not be the same as the units
+//   and scale of the state we’re keeping track of.
+//  ==> We’ll model the sensors with a matrix, H_k.
+//
+//
+//  From each reading we observe, we might guess that our system was in a particular state.
+//   But because there is uncertainty, some states are more likely than others to have have
+//   produced the reading we saw.
+//
+//  terms:
+//     R_k .. covariance of this uncertainty (i.e. of the sensor noise)
+//     z_k .. the reading we observed, or the mean of the distribution, the k'th measurement
+//
+//  A) -> So now we have two Gaussian blobs (in measurement space):
+//       - One surrounding the mean of our transformed prediction (E = H_k * P_k * HT_k);  H maps from state space to measurement space
+//       - one surrounding the actual sensor reading we got.
+//
+//  b) -> And, we have two estimates (in measurement space): 1) H_k * x_k  + 2) z_k (the sensor reading)
+//
+//
+// So what’s our new most likely state?
+//
+//  !! If we have two probabilities and we want to know the chance that both are true, we just multiply them together.
+//
+//  What we’re left with is the overlap, the region where both blobs are bright/likely. And it’s a lot more precise than either of our previous estimates. The mean of this distribution is the configuration for which both estimates are most likely, and is therefore the best guess of the true configuration given all the information we have.
+//  As it turns out, when you multiply two Gaussian blobs with separate means and covariance matrices, you get a new Gaussian blob with its own mean and covariance matrix!
+//
+//
+//   Putting it all together for the UPDATE STEP:
+//
+//    We have two distributions: (in measurement space)
+//     1.) The predicted measurement : (μ0,Σ0) = (H_k * x̂_k, H_k * P_k * HT_k)
+//     2.) the observed measurement  : (μ1,Σ1) = (z_k, R_k)
+//
+//
+//   K′ = P_k * HT_k * (H_k * P_k * HT_k + R_k)^-1   .. Kalman gain
+//   P_k' = P_k - K′ * H_k * P_k
+//   x_k' = x_k + K′(z_k - H_k * x̂_k)
+//
+//
+//   And that’s it! x̂ ′k is our new best estimate, and we can go on and feed it (along with P′k ) back into another round of predict or update as many times as we like.
+
+
 #include <fstream>
 #include <iostream>
 #include <sstream>
