@@ -23,7 +23,7 @@ public:
   /**
   * Run the whole flow of the Kalman Filter from here.
   */
-  void ProcessMeasurement(const MeasurementPackage &measurement_pack);
+  int ProcessMeasurement(const MeasurementPackage &measurement_pack);
 
   /**
   * Kalman Filter update and prediction math lives in here.

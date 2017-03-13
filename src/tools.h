@@ -1,5 +1,8 @@
+
 #ifndef TOOLS_H_
 #define TOOLS_H_
+
+
 #include <vector>
 #include "Eigen/Dense"
 
@@ -23,6 +26,11 @@ public:
   * A helper method to calculate RMSE.
   */
   VectorXd CalculateRMSE(const vector<VectorXd> &estimations, const vector<VectorXd> &ground_truth);
+
+  /**
+  * A helper method to convert polar coordinates into cartesian coordinates
+  */
+  VectorXd ConvertPolarToCartesian(const VectorXd& polar_vec);
 
   /**
   * A helper method to calculate Jacobians.

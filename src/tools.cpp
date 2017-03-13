@@ -1,5 +1,6 @@
 #include <iostream>
 #include "tools.h"
+#include <cmath>
 
 Tools::Tools() {}
 
@@ -38,6 +39,13 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
 
 	//return the result
 	return rmse;
+}
+
+VectorXd Tools::ConvertPolarToCartesian(const VectorXd& polar_vec) {
+	VectorXd cartesian_vec(2);
+	// http://keisan.casio.com/exec/system/1223527679
+	cartesian_vec << polar_vec(0) * cos(polar_vec(1)), polar_vec(0) * sin(polar_vec(1));
+	return cartesian_vec;
 }
 
 
