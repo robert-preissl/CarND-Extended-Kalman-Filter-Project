@@ -206,19 +206,16 @@ int main(int argc, char* argv[]) {
   //Call the EKF-based fusion
   size_t N = measurement_pack_list.size();
   for (size_t k = 0; k < N; ++k) {
-    // start filtering from the second frame (the speed is unknown in the first
-    // frame)
-    cout << " ZZ1 -- meas_package.raw_measurements_ = " << measurement_pack_list[k].raw_measurements_ << endl;
+    // start filtering from the second frame (the speed is unknown in the first frame)
     if(fusionEKF.ProcessMeasurement(measurement_pack_list[k]) < 0) {
-      continue;
+      continue; // if we got a negative responese code (e.g., 0 values), we try another measurment to initialize (only return <0 in init phase)
     }
-cout << " ZZ2 " << endl;
     // output the estimation
     out_file_ << fusionEKF.ekf_.x_(0) << "\t";
     out_file_ << fusionEKF.ekf_.x_(1) << "\t";
     out_file_ << fusionEKF.ekf_.x_(2) << "\t";
     out_file_ << fusionEKF.ekf_.x_(3) << "\t";
-cout << " ZZ3 " << endl;
+
     // output the measurements
     if (measurement_pack_list[k].sensor_type_ == MeasurementPackage::LASER) {
       // output the estimation
