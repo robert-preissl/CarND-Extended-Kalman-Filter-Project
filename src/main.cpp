@@ -1,5 +1,6 @@
 
 // http://www.bzarg.com/p/how-a-kalman-filter-works-in-pictures/
+// http://math.stackexchange.com/questions/840662/an-explanation-of-the-kalman-filter
 //
 //  PREDICT STEP:
 //
